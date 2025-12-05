@@ -1,6 +1,40 @@
 // ===== API Configuration =====
 const API_BASE_URL = 'http://localhost:8000/api';
 
+// ===== Get JWT Token =====
+function getAuthToken() {
+    return localStorage.getItem('access_token');
+}
+
+// ===== API Call with Token =====
+async function apiCallWithAuth(url, options = {}) {
+    const token = getAuthToken();
+
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+
+    // If unauthorized, redirect to login
+    if (response.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_email');
+        window.location.href = '/login.html';
+        throw new Error('Session expired. Please login again.');
+    }
+
+    return response;
+}
+
 // ===== DOM Elements =====
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
@@ -93,7 +127,7 @@ async function searchWeather() {
         currentCity = city;
 
         // Fetch current weather
-        const response = await fetch(`${API_BASE_URL}/weather/${encodeURIComponent(city)}`);
+        const response = await apiCallWithAuth(`${API_BASE_URL}/weather/${encodeURIComponent(city)}`);
         const result = await response.json();
 
         if (!response.ok) {
@@ -139,7 +173,7 @@ function displayCurrentWeather(data) {
 // ===== Hourly Forecast =====
 async function loadHourlyForecast(city) {
     try {
-        const response = await fetch(`${API_BASE_URL}/forecast/hourly/${encodeURIComponent(city)}`);
+        const response = await apiCallWithAuth(`${API_BASE_URL}/forecast/hourly/${encodeURIComponent(city)}`);
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -175,7 +209,7 @@ function displayHourlyForecast(data) {
 // ===== Daily Forecast =====
 async function loadDailyForecast(city) {
     try {
-        const response = await fetch(`${API_BASE_URL}/forecast/daily/${encodeURIComponent(city)}`);
+        const response = await apiCallWithAuth(`${API_BASE_URL}/forecast/daily/${encodeURIComponent(city)}`);
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -278,9 +312,8 @@ async function saveToSheets() {
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Saving...</span>';
 
-        const response = await fetch(`${API_BASE_URL}/weather/save`, {
+        const response = await apiCallWithAuth(`${API_BASE_URL}/weather/save`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(currentWeatherData)
         });
 
@@ -314,7 +347,7 @@ async function loadHistory() {
         hide(historyGrid);
         hide(noHistory);
 
-        const response = await fetch(`${API_BASE_URL}/weather/history?limit=5`);
+        const response = await apiCallWithAuth(`${API_BASE_URL}/weather/history?limit=5`);
         const result = await response.json();
 
         if (result.success && result.data && result.data.length > 0) {
@@ -428,3 +461,29 @@ if (mobileMenuBtn && navMenu) {
 }
 
 console.log('✅ Navbar ready - links will navigate to pages!');
+
+// ===== Authentication Check =====
+// Check if user is authenticated, redirect to login if not
+function checkAuthentication() {
+    const token = getAuthToken();
+    if (!token) {
+        window.location.href = '/login.html';
+    }
+}
+
+// Run auth check on page load
+checkAuthentication();
+
+// ===== Logout Functionality =====
+// Add logout button if it exists
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_email');
+        window.location.href = '/login.html';
+    });
+}
+
+console.log('✅ Authentication check complete!');
+

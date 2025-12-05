@@ -3,7 +3,10 @@ FastAPI application for Weather + Google Sheets integration
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from datetime import datetime
+from pathlib import Path
 from models import (
     WeatherResponse, 
     SaveWeatherRequest, 
@@ -12,6 +15,12 @@ from models import (
 )
 from services.weather_service import weather_service
 from services.sheets_service import sheets_service
+
+# Import authentication
+from auth_routes import router as auth_router
+from auth import get_current_user
+from auth_models import User
+from fastapi import Depends
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -29,19 +38,61 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include authentication routes
+app.include_router(auth_router)
+
+# Get frontend directory path (one level up from backend)
+BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = BASE_DIR / "frontend"
+
 @app.get("/")
 async def root():
-    """Root endpoint"""
+    """Serve frontend login page as default"""
+    login_file = FRONTEND_DIR / "login.html"
+    if login_file.exists():
+        return FileResponse(login_file)
+    # Fallback to index if login doesn't exist yet
+    index_file = FRONTEND_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
     return {
-        "message": "Weather + Google Sheets API",
-        "version": "1.0.0",
+        "message": "WeatherPro API with Authentication",
+        "version": "2.0.0",
         "endpoints": {
+            "auth": "/api/auth",
             "health": "/api/health",
             "weather": "/api/weather/{city}",
             "save": "/api/weather/save",
             "history": "/api/weather/history"
         }
     }
+
+# Serve frontend HTML pages
+@app.get("/{page_name}.html")
+async def serve_page(page_name: str):
+    """Serve frontend HTML pages"""
+    page_file = FRONTEND_DIR / f"{page_name}.html"
+    if page_file.exists():
+        return FileResponse(page_file)
+    raise HTTPException(status_code=404, detail="Page not found")
+
+# Serve CSS files
+@app.get("/{file_name}.css")
+async def serve_css(file_name: str):
+    """Serve CSS files"""
+    css_file = FRONTEND_DIR / f"{file_name}.css"
+    if css_file.exists():
+        return FileResponse(css_file, media_type="text/css")
+    raise HTTPException(status_code=404, detail="CSS file not found")
+
+# Serve JavaScript files
+@app.get("/{file_name}.js")
+async def serve_js(file_name: str):
+    """Serve JavaScript files"""
+    js_file = FRONTEND_DIR / f"{file_name}.js"
+    if js_file.exists():
+        return FileResponse(js_file, media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="JS file not found")
 
 @app.get("/api/health", response_model=HealthResponse)
 async def health_check():
@@ -54,12 +105,16 @@ async def health_check():
 
 
 @app.post("/api/weather/save")
-async def save_weather(request: SaveWeatherRequest):
+async def save_weather(
+    request: SaveWeatherRequest,
+    current_user: User = Depends(get_current_user)
+):
     """
-    Save weather data to Google Sheets
+    Save weather data to Google Sheets (Protected - Requires Login)
     
     Args:
         request: Weather data to save
+        current_user: Current logged-in user
         
     Returns:
         Success status
@@ -83,12 +138,16 @@ async def save_weather(request: SaveWeatherRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/weather/history", response_model=HistoryResponse)
-async def get_history(limit: int = 50):
+async def get_history(
+    limit: int = 50,
+    current_user: User = Depends(get_current_user)
+):
     """
-    Get historical weather data from Google Sheets
+    Get historical weather data from Google Sheets (Protected - Requires Login)
     
     Args:
         limit: Maximum number of records to return (default: 50)
+        current_user: Current logged-in user
         
     Returns:
         List of historical weather records
@@ -105,12 +164,16 @@ async def get_history(limit: int = 50):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/weather/{city}", response_model=WeatherResponse)
-async def get_weather(city: str):
+async def get_weather(
+    city: str,
+    current_user: User = Depends(get_current_user)
+):
     """
-    Get current weather for a city
+    Get current weather for a city (Protected - Requires Login)
     
     Args:
         city: City name (e.g., "Mumbai", "London")
+        current_user: Current logged-in user
         
     Returns:
         Weather data

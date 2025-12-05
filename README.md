@@ -1,214 +1,277 @@
-# 🌤️ Weather + Google Sheets Integration
+# 🌤️ WeatherPro - Professional Weather Forecast Application
 
-A modern web application that fetches weather data from OpenWeatherMap API and stores it in Google Sheets. Built with **FastAPI** backend and **vanilla JavaScript** frontend.
+Free, unlimited weather forecasts for cities, towns, and villages worldwide. No API keys required!
 
 ## ✨ Features
 
-- 🔍 **Search Weather**: Get real-time weather data for any city
-- 📊 **Google Sheets Integration**: Save weather data directly to Google Sheets
-- 📜 **History View**: View all previously saved weather records
-- 🌓 **Dark/Light Mode**: Toggle between themes with persistent preference
-- 📱 **Responsive Design**: Works seamlessly on desktop and mobile
-- 🎨 **Modern UI**: Glassmorphism effects and smooth animations
+- 🏘️ **Village Weather Support** - Get weather for small villages using advanced geocoding
+- 📅 **5-Day Forecast** - Detailed daily forecasts with min/max temperatures
+- ⏰ **Hourly Forecast** - 48-hour forecasts with 3-hour intervals
+- � **Google Sheets Integration** - Save weather data to Google Sheets
+- � **Search History** - Quick access to recent searches
+- 🌓 **Dark/Light Theme** - Toggle between themes
+- 🌍 **Global Coverage** - Weather for any location worldwide
+- ✅ **100% Free** - No API keys, no rate limits, unlimited access
 
-## 🛠️ Tech Stack
+## � Tech Stack
 
 ### Backend
-- **FastAPI**: Modern Python web framework
-- **OpenWeatherMap API**: Weather data provider
-- **Google Sheets API**: Data storage via `gspread`
-- **Pydantic**: Data validation
+- **FastAPI** (Python) - High-performance async API framework
+- **Open-Meteo API** - Free weather data (no API key required!)
+- **Photon/Nominatim** - Advanced geocoding for village support
+- **Google Sheets API** - Cloud-based data storage
 
 ### Frontend
-- **HTML5**: Semantic structure
-- **CSS3**: Modern styling with CSS variables
-- **JavaScript**: Vanilla JS (no frameworks)
+- **HTML/CSS/JavaScript** - Modern, responsive design
+- **Glassmorphism UI** - Premium visual effects
+- **Multi-page Architecture** - Separate pages for different features
 
-## 📋 Prerequisites
+## � Project Structure
 
+```
+mcpnew/
+├── backend/
+│   ├── main.py                 # FastAPI application
+│   ├── models.py               # Pydantic models
+│   ├── services/
+│   │   ├── weather_service.py  # Open-Meteo integration
+│   │   └── sheets_service.py   # Google Sheets integration
+│   └── requirements.txt        # Python dependencies
+│
+├── frontend/
+│   ├── index.html             # Home page (weather search)
+│   ├── features.html          # Features showcase
+│   ├── forecast.html          # Forecast page
+│   ├── history.html           # Search history
+│   ├── about.html             # About & tech stack
+│   ├── style.css              # Shared styles
+│   ├── app.js                 # Main JavaScript
+│   └── forecast.js            # Forecast page logic
+│
+├── .env                       # Environment variables
+├── run_backend.sh             # Backend startup script
+└── run_frontend.sh            # Frontend startup script
+```
+
+## �️ Installation & Setup
+
+### Prerequisites
 - Python 3.8+
-- OpenWeatherMap API key
-- Google Cloud Project with Sheets API enabled
-- Google Service Account credentials
+- Google Cloud Project (for Sheets integration)
 
-## 🚀 Setup Instructions
-
-### 1. Clone/Navigate to Project
+### 1. Clone Repository
 ```bash
 cd /home/vinayak/Documents/mcpnew
 ```
 
-### 2. Install Backend Dependencies
+### 2. Backend Setup
+
+#### Install Dependencies
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-### 3. Environment Variables
-The `.env` file is already configured with your credentials:
-- ✅ Weather API Key
-- ✅ Google Sheet ID
-- ✅ Google Service Account JSON
+#### Configure Environment Variables
+Create `.env` file in project root:
+```env
+# Google Sheets Configuration
+SPREADSHEET_ID=your_spreadsheet_id_here
+GOOGLE_CREDENTIALS_PATH=path/to/credentials.json
 
-**Important**: Never commit `.env` file to git!
-
-### 4. Google Sheet Setup
-Make sure your Google Sheet is shared with the service account email:
-```
-weather-app-service@weather-sheets-app.iam.gserviceaccount.com
+# No weather API key needed - Open-Meteo is free!
 ```
 
-## 🎯 Running the Application
+#### Get Google Sheets Credentials
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Create a new project
+3. Enable Google Sheets API
+4. Create Service Account credentials
+5. Download JSON credentials file
+6. Share your Google Sheet with the service account email
 
-### Start Backend Server
+### 3. Start Backend Server
 ```bash
-cd /home/vinayak/Documents/mcpnew/backend
+# From project root
+./run_backend.sh
+
+# Or manually
+cd backend
 python main.py
 ```
-Backend will run on: `http://localhost:8000`
 
-### Start Frontend Server
-Open a new terminal:
+Backend runs on: `http://localhost:8000`
+
+### 4. Start Frontend Server
 ```bash
-cd /home/vinayak/Documents/mcpnew/frontend
+# From project root
+./run_frontend.sh
+
+# Or manually
+cd frontend
 python -m http.server 3000
 ```
-Frontend will run on: `http://localhost:3000`
 
-### Access the Application
-Open your browser and go to: **http://localhost:3000**
+Frontend runs on: `http://localhost:3000`
 
-## 📡 API Endpoints
+## 🌐 Pages & Navigation
 
-### Health Check
-```
-GET /api/health
-```
+### Available Pages
 
-### Get Weather
-```
-GET /api/weather/{city}
-```
-Example: `GET /api/weather/Mumbai`
+1. **Home** (`index.html`)
+   - Weather search
+   - Current weather display
+   - Hourly & daily forecasts
+   - Save to Google Sheets
+   - Recent search history
 
-### Save Weather
-```
-POST /api/weather/save
-Content-Type: application/json
+2. **Features** (`features.html`)
+   - Complete feature showcase
+   - 8 feature cards with details
 
-{
-  "city": "Mumbai",
-  "temperature": 28.5,
-  "feels_like": 30.2,
-  "humidity": 75,
-  "pressure": 1013,
-  "description": "Clear Sky",
-  "icon": "01d",
-  "wind_speed": 3.5,
-  "country": "IN"
-}
-```
+3. **Forecast** (`forecast.html`)
+   - Dedicated forecast page
+   - Live weather search
+   - Tabbed interface (5-day/hourly)
 
-### Get History
-```
-GET /api/weather/history?limit=50
-```
+4. **History** (`history.html`)
+   - Latest 10 searches
+   - Click to re-search
+   - Timestamps
 
-## 📁 Project Structure
+5. **About** (`about.html`)
+   - Project information
+   - Complete tech stack
+   - Data sources
 
+## 🔧 API Endpoints
+
+### Weather Endpoints
 ```
-mcpnew/
-├── backend/
-│   ├── main.py              # FastAPI application
-│   ├── config.py            # Configuration loader
-│   ├── models.py            # Pydantic models
-│   ├── requirements.txt     # Python dependencies
-│   └── services/
-│       ├── weather_service.py   # Weather API integration
-│       └── sheets_service.py    # Google Sheets integration
-├── frontend/
-│   ├── index.html           # Main HTML
-│   ├── style.css            # Styling
-│   └── app.js               # JavaScript logic
-├── .env                     # Environment variables (DO NOT COMMIT)
-├── .env.example             # Environment template
-├── .gitignore               # Git ignore rules
-└── README.md                # This file
+GET  /api/weather/{city}              # Current weather
+GET  /api/forecast/hourly/{city}      # 48-hour forecast
+GET  /api/forecast/daily/{city}       # 5-day forecast
+GET  /api/geocode/{query}             # Location search
+POST /api/weather/save                # Save to Sheets
+GET  /api/weather/history?limit=5     # Get history
+GET  /api/health                      # Health check
 ```
 
-## 🔒 Security
+## 🎨 Design Features
 
-- ✅ All credentials stored in `.env` file
-- ✅ `.env` added to `.gitignore`
-- ✅ No hardcoded API keys in code
-- ✅ CORS configured for production
-- ✅ Input validation with Pydantic
+- **Modern Gradient Backgrounds** - Purple/blue gradients
+- **Glassmorphism Effects** - Frosted glass UI elements
+- **Smooth Animations** - Hover effects and transitions
+- **Responsive Design** - Mobile-first approach
+- **Dark/Light Themes** - User preference saved locally
 
-## 🎨 UI Features
+## 🌍 Data Sources
 
-- **Modern Design**: Gradient backgrounds and glassmorphism
-- **Dark/Light Mode**: Persistent theme preference
-- **Smooth Animations**: Loading states and transitions
-- **Responsive**: Mobile-first design
-- **Accessibility**: Semantic HTML and ARIA labels
+- **Weather Data**: [Open-Meteo](https://open-meteo.com) - Free, no API key
+- **Geocoding**: [Photon](https://photon.komoot.io) & [Nominatim](https://nominatim.openstreetmap.org)
+- **Weather Icons**: [OpenWeatherMap](https://openweathermap.org)
+- **Storage**: Google Sheets API
 
-## 🧪 Testing
+## 📝 Usage Examples
 
-### Test Backend API
-```bash
-# Health check
-curl http://localhost:8000/api/health
-
-# Get weather
-curl http://localhost:8000/api/weather/Mumbai
+### Search Weather
+```javascript
+// Search for any location
+http://localhost:3000/index.html
+Enter: "Mumbai" or "Garoth" or "Garoth,MP,IN"
 ```
 
-### Test Frontend
-1. Open `http://localhost:3000`
-2. Search for a city (e.g., "Mumbai")
-3. Click "Save to Google Sheets"
-4. Click "Load History" to view saved data
-5. Check your Google Sheet for the new entry
+### View Forecast
+```javascript
+// Navigate to forecast page
+http://localhost:3000/forecast.html
+Search location → View 5-day or hourly forecast
+```
 
-## 📊 Google Sheet Format
+### Check History
+```javascript
+// View recent searches
+http://localhost:3000/history.html
+Click any card to re-search
+```
 
-The app automatically creates headers in your Google Sheet:
+## 🔑 Key Changes from OpenWeatherMap
 
-| Timestamp | City | Country | Temperature (°C) | Feels Like (°C) | Humidity (%) | Pressure (hPa) | Description | Wind Speed (m/s) |
-|-----------|------|---------|------------------|-----------------|--------------|----------------|-------------|------------------|
+### Migration to Open-Meteo
+
+**Why?**
+- ✅ 100% Free - No API key required
+- ✅ No rate limits - Unlimited requests
+- ✅ Better village support - Coordinates-based
+- ✅ More accurate data - Multiple sources
+
+**What Changed?**
+1. Removed `WEATHER_API_KEY` requirement
+2. Updated `weather_service.py` to use Open-Meteo
+3. Added Photon/Nominatim geocoding
+4. Improved village location search
 
 ## 🐛 Troubleshooting
 
-### Backend won't start
-- Check if port 8000 is available
-- Verify `.env` file exists and has correct values
-- Ensure all dependencies are installed
+### Backend Issues
+```bash
+# Check if backend is running
+curl http://localhost:8000/api/health
 
-### Frontend can't connect to backend
-- Make sure backend is running on port 8000
-- Check CORS settings in `backend/main.py`
-- Verify API_BASE_URL in `frontend/app.js`
+# View backend logs
+cd backend
+python main.py
+```
 
-### Google Sheets error
-- Verify Sheet ID is correct
-- Check if service account has Editor access
-- Ensure Google Sheets API is enabled
+### Frontend Issues
+```bash
+# Check if frontend is serving
+curl http://localhost:3000/index.html
 
-### Weather API error
-- Verify API key is valid
-- Check city name spelling
-- Ensure you haven't exceeded API rate limits
+# Restart frontend
+cd frontend
+python -m http.server 3000
+```
 
-## 📝 License
+### Village Not Found
+- Try adding state/country: `Garoth,MP,IN`
+- Use nearest city as fallback
+- Check spelling
 
-This project is open source and available for personal and educational use.
+## 📊 Google Sheets Format
 
-## 🙏 Credits
+Data is saved in this format:
+```
+Timestamp | City | Country | Temperature (°C) | Humidity (%) | Pressure | Description | Wind Speed
+```
 
-- **Weather Data**: [OpenWeatherMap](https://openweathermap.org/)
-- **Icons**: Weather icons from OpenWeatherMap
-- **Fonts**: [Google Fonts - Inter](https://fonts.google.com/specimen/Inter)
+## 🚀 Deployment
+
+### Production Considerations
+1. Use production ASGI server (uvicorn/gunicorn)
+2. Enable CORS properly
+3. Add rate limiting
+4. Use environment variables
+5. Set up HTTPS
+6. Configure caching
+
+## � License
+
+Free to use for personal and educational purposes.
+
+## 🤝 Contributing
+
+This is a personal project. Feel free to fork and modify!
+
+## 📞 Support
+
+For issues or questions:
+- Check the About page for tech stack details
+- Review API documentation
+- Test with different locations
 
 ---
 
-Built with ❤️ using FastAPI & Google Sheets API
+**Built with ❤️ using FastAPI, Open-Meteo & Google Sheets**
+
+© 2025 WeatherPro • No API Key Required • Unlimited Access

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - WeatherPro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-icon">⛅</span>
+                <span class="nav-title">Weather<span class="highlight">Pro</span></span>
+            </div>
+
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="forecast.html" class="nav-link">Forecast</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link active">About</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="theme-btn" id="themeBtn">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <section class="page-hero">
+            <h1 class="page-title">📖 About WeatherPro</h1>
+            <p class="page-subtitle">Free, unlimited weather forecasts for everyone</p>
+        </section>
+
+        <section class="about-content">
+            <div class="about-card">
+                <h2>🎯 Our Mission</h2>
+                <p>WeatherPro provides free, accurate weather forecasts for any location worldwide - from major cities
+                    to small villages. No API keys, no rate limits, just unlimited access to weather data.</p>
+            </div>
+
+            <div class="about-card">
+                <h2>🚀 Technology Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <h3>🔧 Backend</h3>
+                        <p><strong>FastAPI (Python)</strong></p>
+                        <p>High-performance async API framework</p>
+                    </div>
+                    <div class="tech-item">
+                        <h3>🌐 Weather API</h3>
+                        <p><strong>Open-Meteo</strong></p>
+                        <p>Free, open-source weather API with global coverage</p>
+                    </div>
+                    <div class="tech-item">
+                        <h3>🗺️ Geocoding</h3>
+                        <p><strong>Photon & Nominatim</strong></p>
+                        <p>Advanced location search supporting villages</p>
+                    </div>
+                    <div class="tech-item">
+                        <h3>📊 Storage</h3>
+                        <p><strong>Google Sheets API</strong></p>
+                        <p>Cloud-based weather data storage</p>
+                    </div>
+                    <div class="tech-item">
+                        <h3>🎨 Frontend</h3>
+                        <p><strong>HTML/CSS/JavaScript</strong></p>
+                        <p>Modern, responsive design with glassmorphism</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-card">
+                <h2>✨ Key Features</h2>
+                <ul class="features-list">
+                    <li>🏘️ <strong>Village Support:</strong> Weather data for small towns and villages</li>
+                    <li>📅 <strong>5-Day Forecast:</strong> Plan ahead with detailed forecasts</li>
+                    <li>⏰ <strong>Hourly Data:</strong> 48-hour forecasts with 3-hour intervals</li>
+                    <li>💾 <strong>Data Export:</strong> Save searches to Google Sheets</li>
+                    <li>🕐 <strong>History:</strong> Quick access to recent searches</li>
+                    <li>🌓 <strong>Themes:</strong> Dark and light mode support</li>
+                    <li>✅ <strong>100% Free:</strong> No API keys or subscriptions needed</li>
+                    <li>🌍 <strong>Global:</strong> Weather for any location worldwide</li>
+                </ul>
+            </div>
+
+            <div class="about-card">
+                <h2>📍 Data Sources</h2>
+                <div class="data-sources">
+                    <div class="source-item">
+                        <h4>Weather Data</h4>
+                        <p>Open-Meteo API</p>
+                        <a href="https://open-meteo.com" target="_blank">open-meteo.com</a>
+                    </div>
+                    <div class="source-item">
+                        <h4>Geocoding</h4>
+                        <p>Photon & Nominatim</p>
+                        <a href="https://photon.komoot.io" target="_blank">photon.komoot.io</a>
+                    </div>
+                    <div class="source-item">
+                        <h4>Weather Icons</h4>
+                        <p>OpenWeatherMap</p>
+                        <a href="https://openweathermap.org" target="_blank">openweathermap.org</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-simple">
+                <div class="footer-brand">
+                    <h3>⛅ WeatherPro</h3>
+                    <p>Free weather forecasts for any location worldwide</p>
+                </div>
+                <div class="footer-tech">
+                    <h4>Built With</h4>
+                    <div class="tech-badges">
+                        <span class="tech-badge">FastAPI</span>
+                        <span class="tech-badge">Open-Meteo</span>
+                        <span class="tech-badge">Google Sheets</span>
+                        <span class="tech-badge">HTML/CSS/JS</span>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <p>✅ 100% Free • 🌍 Global Coverage • 🏘️ Village Support</p>
+                    <p class="footer-copy">© 2025 WeatherPro • No API Key Required</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('themeBtn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+
+</html>

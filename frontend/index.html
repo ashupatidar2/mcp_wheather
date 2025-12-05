@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Pro - Village Weather Forecast</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Background Gradient -->
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-icon">⛅</span>
+                <span class="nav-title">Weather<span class="highlight">Pro</span></span>
+            </div>
+
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="forecast.html" class="nav-link">Forecast</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="theme-btn" id="themeBtn">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span class="menu-icon">☰</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        </nav>
+
+        <!-- Main Container -->
+        <div class="app-container">
+
+            <!-- Hero Search Section -->
+            <section id="home" class="hero-section">
+                <h1 class="hero-title">Discover Weather<br><span class="gradient-text">Anywhere</span></h1>
+                <p class="hero-subtitle">Get accurate weather for cities, towns, and villages worldwide</p>
+
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search any location...">
+                    <button id="searchBtn" class="search-button">
+                        <span class="search-icon">🔍</span>
+                        <span class="search-text">Search</span>
+                    </button>
+                </div>
+
+                <p class="search-tip">💡 Try: Mumbai, Garoth, or any village name</p>
+            </section>
+
+            <!-- Loading -->
+            <div id="loading" class="loading-container hidden">
+                <div class="loading-spinner"></div>
+                <p>Fetching weather data...</p>
+            </div>
+
+            <!-- Error -->
+            <div id="error" class="error-container hidden">
+                <span class="error-icon">⚠️</span>
+                <p id="errorMessage"></p>
+            </div>
+
+            <!-- Current Weather -->
+            <section id="features" class="current-weather hidden">
+                <div class="weather-main-card">
+                    <div class="weather-location">
+                        <h2 id="locationName"></h2>
+                        <p id="locationCountry"></p>
+                    </div>
+
+                    <div class="weather-display">
+                        <div class="weather-icon-section">
+                            <img id="weatherIcon" class="weather-icon-large" alt="Weather">
+                            <p id="weatherDesc" class="weather-description"></p>
+                        </div>
+
+                        <div class="weather-temp-section">
+                            <div class="temp-display">
+                                <span id="temperature" class="temp-value"></span>
+                                <span class="temp-unit">°C</span>
+                            </div>
+                            <p class="feels-like">Feels like <span id="feelsLike"></span>°C</p>
+                        </div>
+                    </div>
+
+                    <div class="weather-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">💧</span>
+                            <div class="stat-info">
+                                <p class="stat-label">Humidity</p>
+                                <p id="humidity" class="stat-value"></p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">💨</span>
+                            <div class="stat-info">
+                                <p class="stat-label">Wind Speed</p>
+                                <p id="windSpeed" class="stat-value"></p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎚️</span>
+                            <div class="stat-info">
+                                <p class="stat-label">Pressure</p>
+                                <p id="pressure" class="stat-value"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="saveBtn" class="save-button">
+                        <span class="btn-icon">💾</span>
+                        <span class="btn-text">Save to Sheets</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Forecast Tabs -->
+            <section id="forecast" class="forecast-section hidden">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="hourly">Hourly</button>
+                    <button class="tab-btn" data-tab="daily">5-Day</button>
+                </div>
+
+                <!-- Hourly Forecast -->
+                <div id="hourlyTab" class="tab-content active">
+                    <div id="hourlyForecast" class="hourly-grid"></div>
+                </div>
+
+                <!-- Daily Forecast -->
+                <div id="dailyTab" class="tab-content">
+                    <div id="dailyForecast" class="daily-grid"></div>
+                </div>
+            </section>
+
+            <!-- Recent Searches -->
+            <section id="history" class="history-section">
+                <div class="section-header">
+                    <h3>Recent Searches</h3>
+                    <button id="refreshBtn" class="refresh-btn">
+                        <span>🔄</span>
+                    </button>
+                </div>
+                <div id="historyLoading" class="loading-small hidden">
+                    <div class="spinner-small"></div>
+                </div>
+                <div id="historyGrid" class="history-grid hidden"></div>
+                <div id="noHistory" class="no-data hidden">
+                    <p>📭 No recent searches</p>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer id="about" class="app-footer">
+                <div class="footer-simple">
+                    <div class="footer-brand">
+                        <h3>⛅ WeatherPro</h3>
+                        <p>Free weather forecasts for any location worldwide</p>
+                    </div>
+
+                    <div class="footer-tech">
+                        <h4>Built With</h4>
+                        <div class="tech-badges">
+                            <span class="tech-badge">FastAPI</span>
+                            <span class="tech-badge">Open-Meteo</span>
+                            <span class="tech-badge">Google Sheets</span>
+                            <span class="tech-badge">HTML/CSS/JS</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-info">
+                        <p>✅ 100% Free • 🌍 Global Coverage • 🏘️ Village Support</p>
+                        <p class="footer-copy">© 2025 WeatherPro • No API Key Required</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Day Detail Modal -->
+        <div id="dayModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose">✕</button>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+</body>
+
+</html>

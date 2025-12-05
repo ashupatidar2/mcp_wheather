@@ -10,7 +10,8 @@ from models import (
     HistoryResponse,
     HealthResponse
 )
-from services import weather_service, sheets_service
+from services.weather_service import weather_service
+from services.sheets_service import sheets_service
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -130,6 +131,79 @@ async def get_weather(city: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/forecast/hourly/{city}")
+async def get_hourly_forecast(city: str):
+    """
+    Get 48-hour hourly forecast for a city
+    
+    Args:
+        city: City name
+        
+    Returns:
+        List of hourly forecast data
+    """
+    try:
+        hourly_data = weather_service.get_hourly_forecast(city)
+        
+        return {
+            "success": True,
+            "city": city,
+            "data": hourly_data
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/forecast/daily/{city}")
+async def get_daily_forecast(city: str):
+    """
+    Get 8-day daily forecast for a city
+    
+    Args:
+        city: City name
+        
+    Returns:
+        List of daily forecast data
+    """
+    try:
+        daily_data = weather_service.get_daily_forecast(city)
+        
+        return {
+            "success": True,
+            "city": city,
+            "data": daily_data
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/geocode/{query}")
+async def geocode_location(query: str, limit: int = 5):
+    """
+    Geocode a location name to get coordinates and details
+    
+    Args:
+        query: Location name
+        limit: Max results (default: 5)
+        
+    Returns:
+        List of matching locations
+    """
+    try:
+        locations = weather_service.geocode_location(query, limit)
+        
+        return {
+            "success": True,
+            "query": query,
+            "data": locations
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

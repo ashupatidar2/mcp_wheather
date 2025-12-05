@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - WeatherPro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-icon">⛅</span>
+                <span class="nav-title">Weather<span class="highlight">Pro</span></span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="features.html" class="nav-link">Features</a>
+                <a href="forecast.html" class="nav-link">Forecast</a>
+                <a href="history.html" class="nav-link active">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-btn" id="themeBtn">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="app-container">
+        <section class="page-hero">
+            <h1 class="page-title">🕐 Search History</h1>
+            <p class="page-subtitle">Your recent weather searches</p>
+        </section>
+        
+        <section class="history-page">
+            <div class="section-header">
+                <h3>Recent Searches (Latest 10)</h3>
+                <button id="refreshBtn" class="refresh-btn">
+                    <span>🔄</span>
+                </button>
+            </div>
+            
+            <div id="historyLoading" class="loading-small hidden">
+                <div class="spinner-small"></div>
+                <p>Loading history...</p>
+            </div>
+            
+            <div id="historyGrid" class="history-grid hidden"></div>
+            
+            <div id="noHistory" class="no-data hidden">
+                <p>📭 No search history yet</p>
+                <a href="index.html" class="btn-primary">Search Weather</a>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-simple">
+                <div class="footer-brand">
+                    <h3>⛅ WeatherPro</h3>
+                    <p>Free weather forecasts for any location worldwide</p>
+                </div>
+                <div class="footer-tech">
+                    <h4>Built With</h4>
+                    <div class="tech-badges">
+                        <span class="tech-badge">FastAPI</span>
+                        <span class="tech-badge">Open-Meteo</span>
+                        <span class="tech-badge">Google Sheets</span>
+                        <span class="tech-badge">HTML/CSS/JS</span>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <p>✅ 100% Free • 🌍 Global Coverage • 🏘️ Village Support</p>
+                    <p class="footer-copy">© 2025 WeatherPro • No API Key Required</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        const themeBtn = document.getElementById('themeBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const historyGrid = document.getElementById('historyGrid');
+        const historyLoading = document.getElementById('historyLoading');
+        const noHistory = document.getElementById('noHistory');
+        
+        // Theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        // Load History
+        async function loadHistory() {
+            try {
+                historyLoading.classList.remove('hidden');
+                historyGrid.classList.add('hidden');
+                noHistory.classList.add('hidden');
+                
+                const response = await fetch(`${API_BASE_URL}/weather/history?limit=10`);
+                const result = await response.json();
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    displayHistory(result.data);
+                } else {
+                    noHistory.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('History error:', err);
+                noHistory.classList.remove('hidden');
+            } finally {
+                historyLoading.classList.add('hidden');
+            }
+        }
+        
+        function displayHistory(data) {
+            historyGrid.innerHTML = '';
+            
+            data.forEach(record => {
+                const card = document.createElement('div');
+                card.className = 'history-card';
+                
+                const city = record.City || 'Unknown';
+                const country = record.Country || '';
+                const temp = record['Temperature (°C)'] || 'N/A';
+                const desc = record.Description || '';
+                const timestamp = record.Timestamp || '';
+                
+                const time = timestamp ? new Date(timestamp).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : '';
+                
+                card.innerHTML = `
+                    <div class="history-header">
+                        <div class="history-city">${city}</div>
+                        <div class="history-country">${country}</div>
+                    </div>
+                    <div class="history-temp">${temp}°C</div>
+                    <div class="history-desc">${desc}</div>
+                    <div class="history-time">${time}</div>
+                `;
+                
+                historyGrid.appendChild(card);
+            });
+            
+            historyGrid.classList.remove('hidden');
+        }
+        
+        refreshBtn.addEventListener('click', loadHistory);
+        loadHistory();
+    </script>
+</body>
+</html>

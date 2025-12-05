@@ -11,7 +11,7 @@ class WeatherData(BaseModel):
     temperature: float
     feels_like: float
     humidity: int
-    pressure: int
+    pressure: float
     description: str
     icon: str
     wind_speed: float
@@ -30,7 +30,7 @@ class SaveWeatherRequest(BaseModel):
     temperature: float
     feels_like: float
     humidity: int
-    pressure: int
+    pressure: float
     description: str
     icon: str
     wind_speed: float

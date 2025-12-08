@@ -36,10 +36,10 @@ tabBtns.forEach(btn => {
 async function searchForecast() {
     const city = searchInput.value.trim();
     if (!city) return;
-    
+
     loading.classList.remove('hidden');
     forecastSection.classList.add('hidden');
-    
+
     try {
         await Promise.all([loadDaily(city), loadHourly(city)]);
         forecastSection.classList.remove('hidden');
@@ -53,7 +53,7 @@ async function searchForecast() {
 async function loadDaily(city) {
     const response = await fetch(`${API_BASE_URL}/forecast/daily/${encodeURIComponent(city)}`);
     const result = await response.json();
-    
+
     if (result.success && result.data) {
         displayDaily(result.data);
     }
@@ -62,7 +62,7 @@ async function loadDaily(city) {
 async function loadHourly(city) {
     const response = await fetch(`${API_BASE_URL}/forecast/hourly/${encodeURIComponent(city)}`);
     const result = await response.json();
-    
+
     if (result.success && result.data) {
         displayHourly(result.data);
     }
@@ -70,13 +70,13 @@ async function loadHourly(city) {
 
 function displayDaily(data) {
     dailyForecast.innerHTML = '';
-    
+
     data.forEach(day => {
         const card = document.createElement('div');
         card.className = 'daily-card';
-        
+
         const iconUrl = `https://openweathermap.org/img/wn/${day.icon}@2x.png`;
-        
+
         card.innerHTML = `
             <div class="daily-date">${day.date}</div>
             <div class="daily-content">
@@ -92,20 +92,20 @@ function displayDaily(data) {
                 <span>💨 ${day.wind_speed} m/s</span>
             </div>
         `;
-        
+
         dailyForecast.appendChild(card);
     });
 }
 
 function displayHourly(data) {
     hourlyForecast.innerHTML = '';
-    
+
     data.slice(0, 24).forEach(hour => {
         const card = document.createElement('div');
         card.className = 'hourly-card';
-        
+
         const iconUrl = `https://openweathermap.org/img/wn/${hour.icon}@2x.png`;
-        
+
         card.innerHTML = `
             <div class="hourly-time">${hour.time}</div>
             <img src="${iconUrl}" alt="${hour.description}" class="hourly-icon">
@@ -113,7 +113,7 @@ function displayHourly(data) {
             <div class="hourly-desc">${hour.description}</div>
             <div class="hourly-desc">💧 ${hour.pop}%</div>
         `;
-        
+
         hourlyForecast.appendChild(card);
     });
 }

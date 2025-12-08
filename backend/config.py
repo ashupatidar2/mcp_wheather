@@ -34,5 +34,5 @@ class Config:
             raise ValueError("GOOGLE_CREDENTIALS_JSON is not set in .env file")
         return True
 
-# Validate configuration on import
-Config.validate()
+# Validate configuration on import (commented out to make it optional)
+# Config.validate()

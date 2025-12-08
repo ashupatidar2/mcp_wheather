@@ -5,7 +5,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 from typing import List, Dict, Optional
-from config import Config
+from backend.config import Config
 
 class SheetsService:
     """Service for interacting with Google Sheets"""

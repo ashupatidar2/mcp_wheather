@@ -7,19 +7,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from datetime import datetime
 from pathlib import Path
-from models import (
+from backend.models import (
     WeatherResponse, 
     SaveWeatherRequest, 
     HistoryResponse,
     HealthResponse
 )
-from services.weather_service import weather_service
-from services.sheets_service import sheets_service
+from backend.services.weather_service import weather_service
+from backend.services.sheets_service import sheets_service
 
 # Import authentication
-from auth_routes import router as auth_router
-from auth import get_current_user
-from auth_models import User
+from backend.auth_routes import router as auth_router
+from backend.auth import get_current_user
+from backend.auth_models import User
 from fastapi import Depends
 
 # Initialize FastAPI app
@@ -270,7 +270,7 @@ async def geocode_location(query: str, limit: int = 5):
 
 if __name__ == "__main__":
     import uvicorn
-    from config import Config
+    from backend.config import Config
     
     uvicorn.run(
         "main:app",

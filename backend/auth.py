@@ -11,8 +11,8 @@ from sqlalchemy.orm import Session
 import os
 from dotenv import load_dotenv
 
-from database import get_db
-from auth_models import User
+from backend.database import get_db
+from backend.auth_models import User
 
 # Load environment variables
 load_dotenv()

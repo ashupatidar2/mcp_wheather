@@ -4,8 +4,8 @@ Creates database and tables
 """
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from database import Base, engine
-from auth_models import User
+from backend.database import Base, engine
+from backend.auth_models import User
 import os
 from dotenv import load_dotenv
 

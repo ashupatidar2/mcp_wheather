@@ -5,7 +5,7 @@ Supports villages and small locations via coordinates
 import requests
 from typing import Optional, Dict, List
 from datetime import datetime
-from models import WeatherData
+from backend.models import WeatherData
 
 class OpenMeteoService:
     """Service for Open-Meteo API (Free, unlimited)"""

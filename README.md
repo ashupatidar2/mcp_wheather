@@ -2,7 +2,7 @@
 
 Secure, unlimited weather forecasts for cities, towns, and villages worldwide. Features complete user authentication with PostgreSQL and JWT tokens!
 
-## ✨ Features
+## ✨ Features f
 
 ### 🔐 Authentication & Security
 - **User Signup/Login** - Secure account creation with email validation
